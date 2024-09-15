@@ -14,6 +14,9 @@
 #define SMOTOR_STATE_STEPS_STOP 2 // 步数停止
 #define SMOTOR_STATE_USER_STOP 3  // 用户停止
 
+#define SMOTOR_DIR_FORWARD 0  // 向前运动
+#define SMOTOR_DIR_BACKWARD 1 // 向后运动
+
 typedef struct STEPPER_MOTOR
 {
     uint8_t sw_control;                   // 控制开关
@@ -29,6 +32,8 @@ typedef struct STEPPER_MOTOR
 
 void stepper_motor_init(struct STEPPER_MOTOR *motor, void (*clk_toggle_t)(uint8_t), void (*dir_control_t)(uint8_t), uint8_t forwrd_pin_level_t, void (*callback_t)(void));
 int stepper_motor_register(struct STEPPER_MOTOR *motor, uint8_t group_id);
+int8_t stepper_motor_run(struct STEPPER_MOTOR *motor, uint8_t dir_t, uint32_t steps);
+int8_t stepper_motor_stop(struct STEPPER_MOTOR *motor);
 void stepper_motor_group_ticks(uint8_t group_id);
 
 #endif
