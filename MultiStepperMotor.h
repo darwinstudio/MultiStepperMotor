@@ -34,6 +34,7 @@ void stepper_motor_init(struct STEPPER_MOTOR *motor, void (*clk_toggle_t)(uint8_
 int stepper_motor_register(struct STEPPER_MOTOR *motor, uint8_t group_id);
 int8_t stepper_motor_run(struct STEPPER_MOTOR *motor, uint8_t dir_t, uint32_t steps);
 int8_t stepper_motor_stop(struct STEPPER_MOTOR *motor);
-void stepper_motor_group_ticks(uint8_t group_id);
+void stepper_motor_callback_ticks(uint8_t group_id);
+void stepper_motor_group_it_ticks(uint8_t group_id);
 
 #endif

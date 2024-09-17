@@ -126,14 +126,37 @@ int8_t stepper_motor_stop(struct STEPPER_MOTOR *motor)
 }
 
 /**
- * @brief 电机组周期运行函数
+ * @brief 电机组回调函数运行函数
  *
  * @param group_id 要运行的电机组号
  */
-void stepper_motor_group_ticks(uint8_t group_id)
+void stepper_motor_callback_ticks(uint8_t group_id)
 {
     struct STEPPER_MOTOR *group_head_handle;
-    ;
+    struct STEPPER_MOTOR *target;
+    if (group_id >= STEPPER_MOTOR_GROUPS_NUM)
+    {
+        return;
+    }
+    group_head_handle = stepper_motor_group_head[group_id];
+    for (target = group_head_handle; target; target = target->next)
+    {
+        if (target->state == SMOTOR_STATE_STEPS_STOP || target->state == SMOTOR_STATE_USER_STOP)
+        {
+            target->stopcallback();
+            target->state = SMOTOR_STATE_IDLE;
+        }
+    }
+}
+
+/**
+ * @brief 定时器中断电机组周期运行函数
+ *
+ * @param group_id 要运行的电机组号
+ */
+void stepper_motor_group_it_ticks(uint8_t group_id)
+{
+    struct STEPPER_MOTOR *group_head_handle;
     struct STEPPER_MOTOR *target;
     if (group_id >= STEPPER_MOTOR_GROUPS_NUM)
     {
@@ -145,6 +168,12 @@ void stepper_motor_group_ticks(uint8_t group_id)
         if (target->sw_control == STEPPER_MOTOR_ON)
         {
             target->clk_toggle_pin();
+            target->step_counter++;
+            if (target->step_counter >= target->target_steps)
+            {
+                target->sw_control = STEPPER_MOTOR_OFF;
+                target->state = SMOTOR_STATE_STEPS_STOP;
+            }
         }
     }
 }
