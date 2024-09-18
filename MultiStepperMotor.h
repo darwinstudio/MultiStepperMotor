@@ -4,7 +4,7 @@
 #include <stdint.h>
 #include <stddef.h>
 
-#define STEPPER_MOTOR_GROUPS_NUM 5 // 最多支持5个电机组
+#define STEPPER_MOTOR_GROUPS_NUM 1 // 最多支持5个电机组
 
 #define STEPPER_MOTOR_ON 1
 #define STEPPER_MOTOR_OFF 0
@@ -30,8 +30,8 @@ typedef struct STEPPER_MOTOR
     struct STEPPER_MOTOR *next;
 } STEPPER_MOTOR;
 
-void stepper_motor_init(struct STEPPER_MOTOR *motor, void (*clk_toggle_t)(uint8_t), void (*dir_control_t)(uint8_t), uint8_t forwrd_pin_level_t, void (*callback_t)(void));
-int stepper_motor_register(struct STEPPER_MOTOR *motor, uint8_t group_id);
+int8_t stepper_motor_init(struct STEPPER_MOTOR *motor, void (*clk_toggle_t)(void), void (*dir_control_t)(uint8_t), uint8_t forwrd_pin_level_t, void (*callback_t)(void));
+int8_t stepper_motor_register(struct STEPPER_MOTOR *motor, uint8_t group_id);
 int8_t stepper_motor_run(struct STEPPER_MOTOR *motor, uint8_t dir_t, uint32_t steps);
 int8_t stepper_motor_stop(struct STEPPER_MOTOR *motor);
 void stepper_motor_callback_ticks(uint8_t group_id);

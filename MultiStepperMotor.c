@@ -12,7 +12,7 @@ static struct STEPPER_MOTOR *stepper_motor_group_head[STEPPER_MOTOR_GROUPS_NUM] 
  * @param callback_t 电机停止后的回调函数
  * @return int8_t 0 初始化成功，-1 初始化失败
  */
-int8_t stepper_motor_init(struct STEPPER_MOTOR *motor, void (*clk_toggle_t)(uint8_t), void (*dir_control_t)(uint8_t), uint8_t forwrd_pin_level_t, void (*callback_t)(void))
+int8_t stepper_motor_init(struct STEPPER_MOTOR *motor, void (*clk_toggle_t)(void), void (*dir_control_t)(uint8_t), uint8_t forwrd_pin_level_t, void (*callback_t)(void))
 {
     if (motor == NULL)
     {
@@ -55,6 +55,7 @@ int8_t stepper_motor_register(struct STEPPER_MOTOR *motor, uint8_t group_id)
         target = target->next;
     }
     motor->next = head_handle;
+    stepper_motor_group_head[group_id] = motor;
     head_handle = motor;
     return 0;
 }
