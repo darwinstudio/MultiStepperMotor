@@ -122,8 +122,33 @@ int8_t stepper_motor_stop(struct STEPPER_MOTOR *motor)
     }
     motor->sw_control = STEPPER_MOTOR_OFF;
     motor->state = SMOTOR_STATE_USER_STOP;
-    motor->stopcallback();
     return 0;
+}
+
+/**
+ * @brief 获取电机组运行中的电机数量函数
+ *
+ * @param group_id 要获取的电机组号
+ * @return int8_t -1 非法的电机组号，>=0 电机组中运行的电机数量
+ */
+int8_t stepper_motor_queue_group(uint8_t group_id)
+{
+    struct STEPPER_MOTOR *group_head_handle;
+    struct STEPPER_MOTOR *target;
+    uint8_t res_counter = 0;
+    if (group_id >= STEPPER_MOTOR_GROUPS_NUM)
+    {
+        return -1;
+    }
+    group_head_handle = stepper_motor_group_head[group_id];
+    for (target = group_head_handle; target; target = target->next)
+    {
+        if (target->sw_control == STEPPER_MOTOR_ON)
+        {
+            res_counter++;
+        }
+    }
+    return res_counter;
 }
 
 /**
