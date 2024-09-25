@@ -169,7 +169,10 @@ void stepper_motor_callback_ticks(uint8_t group_id)
     {
         if (target->state == SMOTOR_STATE_STEPS_STOP || target->state == SMOTOR_STATE_USER_STOP)
         {
-            target->stopcallback();
+            if (target->stopcallback != NULL)
+            {
+                target->stopcallback();
+            }
             target->state = SMOTOR_STATE_IDLE;
         }
     }
